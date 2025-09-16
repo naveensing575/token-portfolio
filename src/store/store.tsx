@@ -5,7 +5,8 @@ import { loadState, saveState } from "../utils/localStorage";
 const PERSIST_KEY = "watchlistState";
 
 // Load persisted or fallback to initialState
-const persistedWatchlist = loadState<typeof watchlistInitialState>(PERSIST_KEY) ?? watchlistInitialState;
+const persistedWatchlist =
+  loadState<typeof watchlistInitialState>(PERSIST_KEY) ?? watchlistInitialState;
 
 export const store = configureStore({
   reducer: {
@@ -16,9 +17,10 @@ export const store = configureStore({
   },
 });
 
-// Subscribe to changes
+// Persist only tokens + lastUpdated
 store.subscribe(() => {
-  saveState(PERSIST_KEY, store.getState().watchlist);
+  const { tokens, lastUpdated } = store.getState().watchlist;
+  saveState(PERSIST_KEY, { tokens, lastUpdated });
 });
 
 export type RootState = ReturnType<typeof store.getState>;

@@ -50,7 +50,15 @@ const watchlistSlice = createSlice({
   initialState,
   reducers: {
     addToken: (state, action: PayloadAction<Token>) => {
-      state.tokens.push(action.payload);
+      const existing = state.tokens.find((t) => t.id === action.payload.id);
+      if (existing) {
+        // Update symbol/name in case they changed, keep holdings
+        existing.name = action.payload.name;
+        existing.symbol = action.payload.symbol;
+        // Don’t overwrite holdings here unless you want to reset them
+      } else {
+        state.tokens.push(action.payload);
+      }
     },
     updateHoldings: (
       state,
