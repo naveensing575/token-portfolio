@@ -1,1 +1,93 @@
 @import "tailwindcss";
+
+/* Custom Scrollbar Styles */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #64748b;
+  border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #475569;
+}
+
+/* Firefox scrollbar */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #64748b transparent;
+}
+
+/* Custom scrollbar utilities for specific elements */
+.scrollbar-thin {
+  scrollbar-width: thin;
+}
+
+.scrollbar-track-slate-800 {
+  scrollbar-color: #64748b #1e293b;
+}
+
+.scrollbar-thumb-slate-600::-webkit-scrollbar-thumb {
+  background: #475569;
+}
+
+.scrollbar-thumb-slate-500::-webkit-scrollbar-thumb {
+  background: #64748b;
+}
+
+/* Hide scrollbar for specific cases */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* RainbowKit Connect Button Custom Styles */
+.connect-wallet-custom [data-rk] {
+  --rk-colors-connectButtonBackground: #10b981 !important;
+  --rk-colors-connectButtonBackgroundError: #ef4444 !important;
+  --rk-colors-connectButtonInnerBackground: #10b981 !important;
+  --rk-colors-connectButtonText: #ffffff !important;
+  --rk-colors-connectButtonTextError: #ffffff !important;
+}
+
+.connect-wallet-custom button[data-rk] {
+  background-color: #10b981 !important;
+  color: white !important;
+  border-radius: 8px !important;
+  font-weight: 500 !important;
+  transition: all 0.2s ease !important;
+}
+
+.connect-wallet-custom button[data-rk]:hover {
+  background-color: #059669 !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3) !important;
+}
+
+/* Account button when connected */
+.connect-wallet-custom [data-rk] [role="button"] {
+  background-color: #10b981 !important;
+  color: white !important;
+}
+
+/* Chain button styling */
+.connect-wallet-custom [data-rk]>div:first-child {
+  background-color: #10b981 !important;
+}
+
+/* Balance and account info styling */
+.connect-wallet-custom [data-rk]>div {
+  background-color: #10b981 !important;
+  border-color: #059669 !important;
+}
