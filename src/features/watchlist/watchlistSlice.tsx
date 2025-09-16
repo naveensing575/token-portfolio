@@ -15,7 +15,7 @@ interface WatchlistState {
   lastUpdated: string | null;
 }
 
-const initialState: WatchlistState = {
+export const initialState: WatchlistState = {
   tokens: [],
   lastUpdated: null,
 };
