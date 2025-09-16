@@ -5,15 +5,18 @@ import { ConnectButton } from "@rainbow-me/rainbowkit";
 
 function App() {
   return (
-    <div className="min-h-screen bg-gray-900 p-3 sm:p-4 lg:p-6">
-      <div className="max-w-7xl mx-auto">
+    <div className="min-h-screen bg-gray-50 md:bg-gray-900">
+      {/* Mobile: Light background, Desktop: Dark background */}
+      <div className="max-w-7xl mx-auto px-4 py-4 md:px-6 md:py-6">
         {/* Header */}
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 sm:mb-6 gap-3 sm:gap-0">
-          <div className="flex items-center gap-2">
-            <div className="w-6 h-6 sm:w-8 sm:h-8 bg-green-500 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-sm sm:text-lg">T</span>
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4 sm:gap-0">
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 md:w-10 md:h-10 bg-green-500 rounded-xl flex items-center justify-center shadow-sm">
+              <span className="text-white font-bold text-lg md:text-xl">T</span>
             </div>
-            <h1 className="text-xl sm:text-2xl font-bold text-white">Token Portfolio</h1>
+            <h1 className="text-2xl md:text-3xl font-bold text-gray-900 md:text-white">
+              Token Portfolio
+            </h1>
           </div>
           <div className="connect-wallet-custom">
             <ConnectButton />
@@ -21,9 +24,11 @@ function App() {
         </div>
 
         {/* Main Content */}
-        <PortfolioCard />
-        <WatchlistHeader />
-        <WatchlistTable />
+        <div className="space-y-6">
+          <PortfolioCard />
+          <WatchlistHeader />
+          <WatchlistTable />
+        </div>
       </div>
     </div>
   );

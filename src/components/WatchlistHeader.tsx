@@ -17,32 +17,42 @@ function WatchlistHeader() {
   };
 
   return (
-    <div className="flex justify-between items-center mb-6">
-      <div className="flex items-center gap-2">
-        <span className="text-green-400 text-lg">⭐</span>
-        <h2 className="text-xl font-semibold text-white">Watchlist</h2>
-      </div>
+    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-0 mb-6">
+      {/* Title */}
       <div className="flex items-center gap-3">
+        <span className="text-green-500 text-xl">⭐</span>
+        <h2 className="text-xl md:text-2xl font-semibold text-gray-900 md:text-white">
+          Watchlist
+        </h2>
+      </div>
+
+      {/* Actions */}
+      <div className="flex items-center gap-3 w-full sm:w-auto">
+        {/* Refresh Button */}
         <button
           onClick={handleRefresh}
           disabled={loading || tokens.length === 0}
-          className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors ${loading || tokens.length === 0
-              ? "bg-gray-600 text-gray-400 cursor-not-allowed"
-              : "bg-gray-600 text-white hover:bg-gray-500"
+          className={`flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl font-medium transition-all duration-200 text-sm ${loading || tokens.length === 0
+              ? "bg-gray-100 md:bg-gray-600 text-gray-400 cursor-not-allowed"
+              : "bg-gray-100 md:bg-gray-600 text-gray-700 md:text-white hover:bg-gray-200 md:hover:bg-gray-500 active:scale-95"
             }`}
         >
           <RefreshCw
             size={16}
-            className={loading ? "animate-spin" : ""}
+            className={`${loading ? "animate-spin" : ""} transition-transform`}
           />
           <span className="hidden sm:inline">
             {loading ? "Refreshing..." : "Refresh Prices"}
           </span>
           <span className="sm:hidden">
-            Refresh
+            {loading ? "Loading..." : "Refresh"}
           </span>
         </button>
-        <AddTokenModal />
+
+        {/* Add Token Modal */}
+        <div className="flex-1 sm:flex-none">
+          <AddTokenModal />
+        </div>
       </div>
     </div>
   );
