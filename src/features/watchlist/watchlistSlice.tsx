@@ -67,7 +67,7 @@ const watchlistSlice = createSlice({
           price: t.current_price,
           change24h: t.price_change_percentage_24h,
           sparkline: t.sparkline_in_7d.price,
-          holdings: 0,
+          holdings: 2,
         }));
         state.lastUpdated = new Date().toISOString();
       })
