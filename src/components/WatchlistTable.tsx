@@ -1,11 +1,11 @@
-import React, { useEffect } from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import type { RootState, AppDispatch } from "../store/store";
+import type { AppDispatch } from "../store/store";
 import {
   updateHoldings,
   removeToken,
-  setPage,
-  fetchMarketTokens,
+  selectWatchlistTokens,
+  selectLoading,
 } from "../features/watchlist/watchlistSlice";
 import {
   LineChart,
@@ -15,26 +15,40 @@ import {
 
 const WatchlistTable: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const { tokens, loading, error, page, perPage } = useSelector(
-    (state: RootState) => state.watchlist
-  );
+  const tokens = useSelector(selectWatchlistTokens);
+  const loading = useSelector(selectLoading);
 
-  // Fetch tokens on page change
-  useEffect(() => {
-    dispatch(fetchMarketTokens(page));
-  }, [dispatch, page]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
+
+  const totalPages = Math.ceil(tokens.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const currentTokens = tokens.slice(startIndex, endIndex);
+
+  // Debug info
+  console.log("Debug:", {
+    tokensLength: tokens.length,
+    totalPages,
+    currentPage,
+    isNextDisabled: currentPage >= totalPages
+  });
 
   const handleHoldingsChange = (id: string, value: string) => {
     const num = parseFloat(value) || 0;
     dispatch(updateHoldings({ id, holdings: num }));
   };
 
-  const handlePrev = () => {
-    if (page > 1) dispatch(setPage(page - 1));
+  const handlePrevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
   };
 
-  const handleNext = () => {
-    dispatch(setPage(page + 1));
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
   };
 
   return (
@@ -55,71 +69,79 @@ const WatchlistTable: React.FC = () => {
           {loading && (
             <tr>
               <td colSpan={7} className="text-center py-4">
-                Loading tokens...
+                Loading...
               </td>
             </tr>
           )}
-
-          {!loading && error && (
-            <tr>
-              <td colSpan={7} className="text-center py-4 text-red-500">
-                {error}
-              </td>
-            </tr>
-          )}
-
-          {!loading && !error && tokens.length === 0 && (
+          {!loading && tokens.length === 0 && (
             <tr>
               <td colSpan={7} className="text-center py-4 text-gray-500">
-                No tokens in watchlist
+                No tokens in watchlist. Click "Add Token" to get started.
               </td>
             </tr>
           )}
-
           {!loading &&
-            !error &&
-            tokens.map((t) => {
+            currentTokens.map((t) => {
               const value = t.holdings * t.price;
               return (
-                <tr key={t.id} className="border-b">
-                  <td className="px-4 py-2 font-medium">
-                    {t.name} ({t.symbol.toUpperCase()})
+                <tr key={t.id} className="border-b hover:bg-gray-50">
+                  <td className="px-4 py-2">
+                    <div className="flex items-center gap-2">
+                      <img
+                        src={t.image}
+                        alt={t.name}
+                        className="w-6 h-6 rounded-full"
+                      />
+                      <div>
+                        <div className="font-medium">{t.name}</div>
+                        <div className="text-gray-500 text-xs">{t.symbol.toUpperCase()}</div>
+                      </div>
+                    </div>
                   </td>
                   <td className="px-4 py-2">${t.price.toFixed(2)}</td>
                   <td
                     className={`px-4 py-2 font-semibold ${t.change24h >= 0 ? "text-green-600" : "text-red-600"
                       }`}
                   >
-                    {t.change24h.toFixed(2)}%
+                    {t.change24h >= 0 ? "+" : ""}{t.change24h.toFixed(2)}%
                   </td>
                   <td className="px-4 py-2 w-32">
-                    <ResponsiveContainer width="100%" height={40}>
-                      <LineChart data={t.sparkline.map((y, i) => ({ x: i, y }))}>
-                        <Line
-                          type="monotone"
-                          dataKey="y"
-                          stroke={t.change24h >= 0 ? "#16a34a" : "#dc2626"}
-                          strokeWidth={2}
-                          dot={false}
-                        />
-                      </LineChart>
-                    </ResponsiveContainer>
+                    {t.sparkline.length > 0 ? (
+                      <ResponsiveContainer width="100%" height={40}>
+                        <LineChart data={t.sparkline.map((y, i) => ({ x: i, y }))}>
+                          <Line
+                            type="monotone"
+                            dataKey="y"
+                            stroke={t.change24h >= 0 ? "#16a34a" : "#dc2626"}
+                            strokeWidth={2}
+                            dot={false}
+                          />
+                        </LineChart>
+                      </ResponsiveContainer>
+                    ) : (
+                      <div className="text-gray-400 text-xs">No data</div>
+                    )}
                   </td>
                   <td className="px-4 py-2">
                     <input
                       type="number"
+                      min="0"
+                      step="0.01"
                       value={t.holdings}
                       onChange={(e) =>
                         handleHoldingsChange(t.id, e.target.value)
                       }
-                      className="w-20 border rounded px-2 py-1"
+                      className="w-20 border rounded px-2 py-1 text-center"
+                      placeholder="0"
                     />
                   </td>
-                  <td className="px-4 py-2">${value.toFixed(2)}</td>
+                  <td className="px-4 py-2 font-medium">
+                    ${value.toFixed(2)}
+                  </td>
                   <td className="px-4 py-2">
                     <button
                       onClick={() => dispatch(removeToken(t.id))}
-                      className="text-red-500 hover:underline"
+                      className="text-red-500 hover:text-red-700 text-sm"
                     >
                       Remove
                     </button>
@@ -130,28 +152,38 @@ const WatchlistTable: React.FC = () => {
         </tbody>
       </table>
 
-      {/* Pagination footer */}
-      <div className="flex justify-between items-center px-4 py-3 bg-gray-50 border-t">
-        <button
-          onClick={handlePrev}
-          disabled={page === 1}
-          className={`px-3 py-1 rounded ${page === 1
-              ? "bg-gray-200 text-gray-400 cursor-not-allowed"
-              : "bg-blue-600 text-white hover:bg-blue-700"
-            }`}
-        >
-          Prev
-        </button>
-        <span className="text-sm text-gray-600">
-          Page {page} (showing {perPage} tokens)
-        </span>
-        <button
-          onClick={handleNext}
-          className="px-3 py-1 rounded bg-blue-600 text-white hover:bg-blue-700"
-        >
-          Next
-        </button>
-      </div>
+      {tokens.length > 0 && (
+        <div className="flex justify-between items-center px-4 py-3 bg-gray-50 border-t">
+          <div className="text-sm text-gray-600">
+            {startIndex + 1} – {Math.min(endIndex, tokens.length)} of {tokens.length} results
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-gray-600">
+              {currentPage} of {totalPages} pages
+            </span>
+            <button
+              onClick={handlePrevPage}
+              disabled={currentPage === 1}
+              className={`px-3 py-1 rounded text-sm ${currentPage === 1
+                  ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+                  : "bg-blue-600 text-white hover:bg-blue-700"
+                }`}
+            >
+              Prev
+            </button>
+            <button
+              onClick={handleNextPage}
+              disabled={currentPage >= totalPages || tokens.length === 0}
+              className={`px-3 py-1 rounded text-sm ${currentPage >= totalPages || tokens.length === 0
+                  ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+                  : "bg-blue-600 text-white hover:bg-blue-700"
+                }`}
+            >
+              Next
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -19,10 +19,9 @@ const queryClient = new QueryClient();
 
 const { connectors } = getDefaultWallets({
   appName: "Token Portfolio",
-  projectId: "1835993f47bbb4e3e94501e210a2274e", // WalletConnect Cloud projectId
+  projectId: import.meta.env.VITE_WALLETCONNECT_PROJECT_ID,
 });
 
-// Wagmi config (chains declared here)
 const config = createConfig({
   connectors,
   chains: [mainnet],
