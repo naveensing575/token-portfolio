@@ -3,6 +3,7 @@ import { useDispatch } from "react-redux";
 import { fetchMarketTokens } from "./features/watchlist/watchlistSlice";
 import type { AppDispatch } from "./store/store";
 import PortfolioCard from "./components/PortfolioCard";
+import WatchlistTable from "./components/WatchlistTable";
 
 function App() {
   const dispatch = useDispatch<AppDispatch>();
@@ -15,6 +16,7 @@ function App() {
     <div className="min-h-screen bg-gray-50 p-6">
       <h1 className="text-2xl font-bold mb-6">Token Portfolio</h1>
       <PortfolioCard />
+      <WatchlistTable />
     </div>
   );
 }
