@@ -17,6 +17,9 @@ interface WatchlistState {
   lastUpdated: string | null;
   loading: boolean;
   error: string | null;
+  page: number;
+  perPage: number;
+  total: number;
 }
 
 export const initialState: WatchlistState = {
@@ -24,13 +27,22 @@ export const initialState: WatchlistState = {
   lastUpdated: null,
   loading: false,
   error: null,
+  page: 1,        // ✅ initialized
+  perPage: 10,    // ✅ initialized
+  total: 0,
 };
 
 // Fetch top market tokens (paginated)
 export const fetchMarketTokens = createAsyncThunk(
   "watchlist/fetchMarketTokens",
-  async (page: number) => {
-    return await getMarketTokens(page);
+  async (page: number | undefined, { getState }) => {
+    const state = getState() as RootState;
+
+    // ✅ Guard against NaN/undefined
+    const validPage =
+      typeof page === "number" && page > 0 ? page : state.watchlist.page || 1;
+
+    return await getMarketTokens(validPage, state.watchlist.perPage);
   }
 );
 
@@ -52,10 +64,8 @@ const watchlistSlice = createSlice({
     addToken: (state, action: PayloadAction<Token>) => {
       const existing = state.tokens.find((t) => t.id === action.payload.id);
       if (existing) {
-        // Update symbol/name in case they changed, keep holdings
         existing.name = action.payload.name;
         existing.symbol = action.payload.symbol;
-        // Don’t overwrite holdings here unless you want to reset them
       } else {
         state.tokens.push(action.payload);
       }
@@ -72,7 +82,16 @@ const watchlistSlice = createSlice({
     removeToken: (state, action: PayloadAction<string>) => {
       state.tokens = state.tokens.filter((t) => t.id !== action.payload);
     },
+    setPage: (state, action: PayloadAction<number>) => {
+      // ✅ enforce page >= 1
+      state.page = action.payload > 0 ? action.payload : 1;
+    },
+    setPerPage: (state, action: PayloadAction<number>) => {
+      // ✅ enforce min 1, max 250 as per CoinGecko API
+      state.perPage = Math.min(Math.max(action.payload, 1), 250);
+    },
   },
+
   extraReducers: (builder) => {
     // Fetch market tokens
     builder.addCase(fetchMarketTokens.pending, (state) => {
@@ -91,6 +110,9 @@ const watchlistSlice = createSlice({
         holdings: 0,
       }));
       state.lastUpdated = new Date().toISOString();
+
+      // ✅ Approximate total (since CoinGecko doesn’t return it)
+      state.total = (state.page + 1) * state.perPage;
     });
     builder.addCase(fetchMarketTokens.rejected, (state, action) => {
       state.loading = false;
@@ -114,7 +136,12 @@ const watchlistSlice = createSlice({
   },
 });
 
-export const { addToken, updateHoldings, removeToken } =
-  watchlistSlice.actions;
+export const {
+  addToken,
+  updateHoldings,
+  removeToken,
+  setPage,
+  setPerPage,
+} = watchlistSlice.actions;
 
 export default watchlistSlice.reducer;
