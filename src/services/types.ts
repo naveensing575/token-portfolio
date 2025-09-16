@@ -1,5 +1,8 @@
 // Market tokens (used in portfolio + table)
 export interface MarketToken {
+  price: number;
+  change24h: number;
+  sparkline: number[];
   id: string;
   symbol: string;
   name: string;

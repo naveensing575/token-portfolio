@@ -21,6 +21,22 @@ export const getMarketTokens = async (
   return data;
 };
 
+export const getTokenPricesByIds = async (
+  ids: string[]
+): Promise<MarketToken[]> => {
+  if (ids.length === 0) return [];
+  const { data } = await axios.get<MarketToken[]>(`${API_BASE}/coins/markets`, {
+    params: {
+      vs_currency: "usd",
+      ids: ids.join(","),
+      sparkline: true,
+      price_change_percentage: "24h",
+    },
+  });
+  return data;
+};
+
+
 // 🔹 Search tokens by query
 export const searchTokens = async (query: string): Promise<SearchToken[]> => {
   const { data } = await axios.get<{ coins: SearchToken[] }>(
