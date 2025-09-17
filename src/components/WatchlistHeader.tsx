@@ -3,6 +3,7 @@ import { refreshPrices, selectLoading, selectWatchlistTokens } from "../features
 import type { AppDispatch } from "../store/store";
 import AddTokenModal from "./AddTokenModal";
 import { RefreshCw } from "lucide-react";
+import starSvg from "../assets/star.svg";
 
 function WatchlistHeader() {
   const dispatch = useDispatch<AppDispatch>();
@@ -17,44 +18,89 @@ function WatchlistHeader() {
   };
 
   return (
-    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-0 mb-6">
-      {/* Title */}
-      <div className="flex items-center gap-3">
-        <span className="text-green-500 text-xl">⭐</span>
-        <h2 className="text-xl md:text-2xl font-semibold text-gray-900 md:text-white">
-          Watchlist
-        </h2>
-      </div>
+    <>
+      {/* Mobile Layout */}
+      <div className="block md:hidden mb-4">
+        {/* Mobile Header */}
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-2">
+            <img
+              src={starSvg}
+              alt="Star"
+              className="w-5 h-5"
+            />
+            <h2 className="text-lg font-semibold text-white">Watchlist</h2>
+          </div>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={handleRefresh}
+              disabled={loading || tokens.length === 0}
+              className={`flex items-center justify-center p-2 rounded-lg transition-colors ${loading || tokens.length === 0
+                  ? "bg-gray-700 text-gray-500 cursor-not-allowed"
+                  : "bg-gray-700 text-gray-300 hover:bg-gray-600"
+                }`}
+            >
+              <RefreshCw
+                size={16}
+                className={`${loading ? "animate-spin" : ""} transition-transform`}
+              />
+            </button>
+            <AddTokenModal />
+          </div>
+        </div>
 
-      {/* Actions */}
-      <div className="flex items-center gap-3 w-full sm:w-auto">
-        {/* Refresh Button */}
-        <button
-          onClick={handleRefresh}
-          disabled={loading || tokens.length === 0}
-          className={`flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl font-medium transition-all duration-200 text-sm ${loading || tokens.length === 0
-              ? "bg-gray-100 md:bg-gray-600 text-gray-400 cursor-not-allowed"
-              : "bg-gray-100 md:bg-gray-600 text-gray-700 md:text-white hover:bg-gray-200 md:hover:bg-gray-500 active:scale-95"
-            }`}
-        >
-          <RefreshCw
-            size={16}
-            className={`${loading ? "animate-spin" : ""} transition-transform`}
-          />
-          <span className="hidden sm:inline">
-            {loading ? "Refreshing..." : "Refresh Prices"}
-          </span>
-          <span className="sm:hidden">
-            {loading ? "Loading..." : "Refresh"}
-          </span>
-        </button>
-
-        {/* Add Token Modal */}
-        <div className="flex-1 sm:flex-none">
-          <AddTokenModal />
+        {/* Mobile Table Headers */}
+        <div className="grid grid-cols-3 gap-4 px-4 py-2 text-xs font-medium text-gray-400 uppercase tracking-wide border-b border-gray-700">
+          <div>Token</div>
+          <div className="text-right">Price</div>
+          <div className="text-right">Value</div>
         </div>
       </div>
-    </div>
+
+      {/* Desktop Layout */}
+      <div className="hidden md:flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-0 mb-6">
+        {/* Title */}
+        <div className="flex items-center gap-3">
+          <img
+            src={starSvg}
+            alt="Star"
+            className="w-6 h-6"
+          />
+          <h2 className="text-xl md:text-2xl font-semibold text-white">
+            Watchlist
+          </h2>
+        </div>
+
+        {/* Actions */}
+        <div className="flex items-center gap-3 w-full sm:w-auto">
+          {/* Refresh Button */}
+          <button
+            onClick={handleRefresh}
+            disabled={loading || tokens.length === 0}
+            className={`flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg font-medium transition-all duration-200 text-sm ${loading || tokens.length === 0
+                ? "bg-gray-700 text-gray-500 cursor-not-allowed"
+                : "bg-gray-700 text-gray-300 hover:bg-gray-600 active:scale-95"
+              }`}
+          >
+            <RefreshCw
+              size={16}
+              className={`${loading ? "animate-spin" : ""} transition-transform`}
+            />
+            <span className="hidden sm:inline">
+              {loading ? "Refreshing..." : "Refresh Prices"}
+            </span>
+            <span className="sm:hidden">
+              {loading ? "Loading..." : "Refresh"}
+            </span>
+          </button>
+
+          {/* Add Token Modal */}
+          <div className="flex-1 sm:flex-none">
+            <AddTokenModal />
+          </div>
+        </div>
+      </div>
+    </>
   );
 }
 

@@ -7,17 +7,23 @@ import {
   selectWatchlistTokens,
   selectLoading,
 } from "../features/watchlist/watchlistSlice";
-import {
-  LineChart,
-  Line,
-  ResponsiveContainer,
-} from "recharts";
+import { LineChart, Line, ResponsiveContainer } from "recharts";
 import { MoreHorizontal, Edit, Trash2 } from "lucide-react";
+import TokenImage from "./TokenImage";
 
-// Separate components for better organization
-const TokenRow: React.FC<{
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  token: any;
+interface Token {
+  id: string;
+  name: string;
+  symbol: string;
+  image: string;
+  price: number;
+  change24h: number;
+  sparkline: number[];
+  holdings: number;
+}
+
+interface TokenRowProps {
+  token: Token;
   isEditing: boolean;
   editValue: string;
   openMenuId: string | null;
@@ -27,7 +33,9 @@ const TokenRow: React.FC<{
   onRemoveToken: (id: string) => void;
   onToggleMenu: (id: string) => void;
   onEditValueChange: (value: string) => void;
-}> = ({
+}
+
+const TokenRow: React.FC<TokenRowProps> = ({
   token,
   isEditing,
   editValue,
@@ -39,115 +47,111 @@ const TokenRow: React.FC<{
   onToggleMenu,
   onEditValueChange,
 }) => {
-    const value = token.holdings * token.price;
-    const formatPrice = (price: number) => {
-      if (price < 0.01) return `$${price.toFixed(6)}`;
-      if (price < 1) return `$${price.toFixed(4)}`;
-      return `$${price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-    };
-
-    return (
-      <tr className="border-b border-gray-700 hover:bg-gray-750 text-white">
-        <td className="px-4 py-3">
-          <div className="flex items-center gap-3">
-            <img
-              src={token.image}
-              alt={token.name}
-              className="w-8 h-8 rounded-full"
-              onError={(e) => {
-                // Fallback for broken images
-                const target = e.target as HTMLImageElement;
-                target.src = `https://via.placeholder.com/32x32/4F46E5/FFFFFF?text=${token.symbol.charAt(0).toUpperCase()}`;
-              }}
-            />
-            <div>
-              <div className="font-medium text-white">{token.name}</div>
-              <div className="text-gray-400 text-xs">{token.symbol.toUpperCase()}</div>
-            </div>
-          </div>
-        </td>
-        <td className="px-4 py-3 text-white font-medium">{formatPrice(token.price)}</td>
-        <td className={`px-4 py-3 font-semibold ${token.change24h >= 0 ? "text-green-400" : "text-red-400"}`}>
-          {token.change24h >= 0 ? "+" : ""}{token.change24h.toFixed(2)}%
-        </td>
-        <td className="px-4 py-3 w-32">
-          {token.sparkline?.length > 0 ? (
-            <ResponsiveContainer width="100%" height={40}>
-              <LineChart data={token.sparkline.map((y: number, i: number) => ({ x: i, y }))}>
-                <Line
-                  type="monotone"
-                  dataKey="y"
-                  stroke={token.change24h >= 0 ? "#4ade80" : "#f87171"}
-                  strokeWidth={2}
-                  dot={false}
-                />
-              </LineChart>
-            </ResponsiveContainer>
-          ) : (
-            <div className="text-gray-400 text-xs">No data</div>
-          )}
-        </td>
-        <td className="px-4 py-3">
-          {isEditing ? (
-            <div className="flex items-center gap-2">
-              <input
-                type="number"
-                min="0"
-                step="0.01"
-                value={editValue}
-                onChange={(e) => onEditValueChange(e.target.value)}
-                className="w-20 bg-gray-700 border border-gray-600 rounded px-2 py-1 text-center text-white focus:outline-none focus:border-blue-500"
-                autoFocus
-              />
-              <button
-                onClick={() => onSaveEdit(token.id)}
-                className="text-green-400 hover:text-green-300 text-xs px-1"
-              >
-                Save
-              </button>
-              <button
-                onClick={onCancelEdit}
-                className="text-gray-400 hover:text-gray-300 text-xs px-1"
-              >
-                Cancel
-              </button>
-            </div>
-          ) : (
-            <span className="text-white">{token.holdings}</span>
-          )}
-        </td>
-        <td className="px-4 py-3 font-medium text-white">
-          ${value.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-        </td>
-        <td className="px-4 py-3 relative">
-          <button
-            onClick={() => onToggleMenu(token.id)}
-            className="p-1 text-gray-400 hover:text-white rounded transition-colors"
-          >
-            <MoreHorizontal size={16} />
-          </button>
-          {openMenuId === token.id && (
-            <div className="absolute right-0 top-8 bg-gray-700 border border-gray-600 rounded-lg shadow-lg z-10 min-w-[140px]">
-              <button
-                onClick={() => onEditHoldings(token.id, token.holdings)}
-                className="flex items-center gap-2 w-full px-3 py-2 text-sm text-white hover:bg-gray-600 rounded-t-lg transition-colors"
-              >
-                <Edit size={14} />
-                Edit Holdings
-              </button>
-              <button
-                onClick={() => onRemoveToken(token.id)}
-                className="flex items-center gap-2 w-full px-3 py-2 text-sm text-red-400 hover:bg-gray-600 rounded-b-lg transition-colors"
-              >
-                <Trash2 size={14} />
-                Remove
-              </button>
-            </div>
-          )}
-        </td>
-      </tr>
-    );
+  const value = token.holdings * token.price;
+  const formatPrice = (price: number) => {
+    if (price < 0.01) return `$${price.toFixed(6)}`;
+    if (price < 1) return `$${price.toFixed(4)}`;
+    return `$${price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
   };
+
+  return (
+    <tr className="border-b border-gray-700 hover:bg-gray-750 text-white">
+      <td className="px-4 py-3">
+        <div className="flex items-center gap-3">
+          <TokenImage
+            src={token.image}
+            alt={token.name}
+            symbol={token.symbol}
+            className="w-8 h-8 rounded-full"
+          />
+          <div>
+            <div className="font-medium text-white">{token.name}</div>
+            <div className="text-gray-400 text-xs">{token.symbol.toUpperCase()}</div>
+          </div>
+        </div>
+      </td>
+      <td className="px-4 py-3 text-white font-medium">{formatPrice(token.price)}</td>
+      <td className={`px-4 py-3 font-semibold ${token.change24h >= 0 ? "text-green-400" : "text-red-400"}`}>
+        {token.change24h >= 0 ? "+" : ""}{token.change24h.toFixed(2)}%
+      </td>
+      <td className="px-4 py-3 w-32">
+        {token.sparkline?.length > 0 ? (
+          <ResponsiveContainer width="100%" height={40}>
+            <LineChart data={token.sparkline.map((y: number, i: number) => ({ x: i, y }))}>
+              <Line
+                type="monotone"
+                dataKey="y"
+                stroke={token.change24h >= 0 ? "#4ade80" : "#f87171"}
+                strokeWidth={2}
+                dot={false}
+              />
+            </LineChart>
+          </ResponsiveContainer>
+        ) : (
+          <div className="text-gray-400 text-xs">No data</div>
+        )}
+      </td>
+      <td className="px-4 py-3">
+        {isEditing ? (
+          <div className="flex items-center gap-2">
+            <input
+              type="number"
+              min="0"
+              step="0.01"
+              value={editValue}
+              onChange={(e) => onEditValueChange(e.target.value)}
+              className="w-20 bg-gray-700 border border-gray-600 rounded px-2 py-1 text-center text-white focus:outline-none focus:border-[#A9E851]"
+              autoFocus
+            />
+            <button
+              onClick={() => onSaveEdit(token.id)}
+              className="text-[#A9E851] hover:text-[#98d147] text-xs px-1 font-medium"
+            >
+              Save
+            </button>
+            <button
+              onClick={onCancelEdit}
+              className="text-gray-400 hover:text-gray-300 text-xs px-1"
+            >
+              Cancel
+            </button>
+          </div>
+        ) : (
+          <span className="text-white">{token.holdings}</span>
+        )}
+      </td>
+      <td className="px-4 py-3 font-medium text-white">
+        ${value.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+      </td>
+      <td className="px-4 py-3 relative">
+        <button
+          onClick={() => onToggleMenu(token.id)}
+          className="p-1 text-gray-400 hover:text-white rounded transition-colors"
+        >
+          <MoreHorizontal size={16} />
+        </button>
+        {openMenuId === token.id && (
+          <div className="absolute right-0 top-8 bg-gray-700 border border-gray-600 rounded-lg shadow-lg z-10 min-w-[140px]">
+            <button
+              onClick={() => onEditHoldings(token.id, token.holdings)}
+              className="flex items-center gap-2 w-full px-3 py-2 text-sm text-white hover:bg-gray-600 rounded-t-lg transition-colors"
+            >
+              <Edit size={14} />
+              Edit Holdings
+            </button>
+            <button
+              onClick={() => onRemoveToken(token.id)}
+              className="flex items-center gap-2 w-full px-3 py-2 text-sm text-red-400 hover:bg-gray-600 rounded-b-lg transition-colors"
+            >
+              <Trash2 size={14} />
+              Remove
+            </button>
+          </div>
+        )}
+      </td>
+    </tr>
+  );
+};
 
 const Pagination: React.FC<{
   currentPage: number;
@@ -179,7 +183,7 @@ const Pagination: React.FC<{
           disabled={currentPage === 1}
           className={`px-3 py-1 rounded text-sm transition-colors ${currentPage === 1
               ? "bg-gray-600 text-gray-400 cursor-not-allowed"
-              : "bg-blue-600 text-white hover:bg-blue-700"
+              : "bg-gray-600 text-white hover:bg-gray-500"
             }`}
         >
           Prev
@@ -189,7 +193,7 @@ const Pagination: React.FC<{
           disabled={currentPage >= totalPages}
           className={`px-3 py-1 rounded text-sm transition-colors ${currentPage >= totalPages
               ? "bg-gray-600 text-gray-400 cursor-not-allowed"
-              : "bg-blue-600 text-white hover:bg-blue-700"
+              : "bg-[#A9E851] text-black hover:bg-[#98d147] font-medium"
             }`}
         >
           Next
@@ -202,12 +206,10 @@ const WatchlistTable: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const tokens = useSelector(selectWatchlistTokens);
   const loading = useSelector(selectLoading);
-
   const [currentPage, setCurrentPage] = useState(1);
   const [openMenuId, setOpenMenuId] = useState<string | null>(null);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editValue, setEditValue] = useState("");
-
   const menuRef = useRef<HTMLDivElement>(null);
 
   // Close menu when clicking outside
@@ -217,7 +219,6 @@ const WatchlistTable: React.FC = () => {
         setOpenMenuId(null);
       }
     };
-
     if (openMenuId) {
       document.addEventListener("mousedown", handleClickOutside);
       return () => document.removeEventListener("mousedown", handleClickOutside);
@@ -232,7 +233,6 @@ const WatchlistTable: React.FC = () => {
         setEditingId(null);
       }
     };
-
     document.addEventListener("keydown", handleEscape);
     return () => document.removeEventListener("keydown", handleEscape);
   }, []);
@@ -286,7 +286,7 @@ const WatchlistTable: React.FC = () => {
     return (
       <div className="mt-8 bg-gray-800 shadow rounded-lg">
         <div className="p-12 text-center text-gray-400">
-          <div className="animate-spin w-8 h-8 border-2 border-gray-600 border-t-blue-500 rounded-full mx-auto mb-4"></div>
+          <div className="animate-spin w-8 h-8 border-2 border-gray-600 border-t-[#A9E851] rounded-full mx-auto mb-4"></div>
           Loading tokens...
         </div>
       </div>
@@ -306,37 +306,39 @@ const WatchlistTable: React.FC = () => {
   }
 
   return (
-    <div ref={menuRef} className="mt-8 overflow-x-auto bg-gray-800 shadow rounded-lg">
-      <table className="min-w-full text-sm text-left">
-        <thead className="bg-gray-700 text-gray-300 uppercase text-xs">
-          <tr>
-            <th className="px-4 py-3 font-medium">Token</th>
-            <th className="px-4 py-3 font-medium">Price</th>
-            <th className="px-4 py-3 font-medium">24h %</th>
-            <th className="px-4 py-3 font-medium">Sparkline (7d)</th>
-            <th className="px-4 py-3 font-medium">Holdings</th>
-            <th className="px-4 py-3 font-medium">Value</th>
-            <th className="px-4 py-3 w-12"></th>
-          </tr>
-        </thead>
-        <tbody>
-          {currentTokens.map((token) => (
-            <TokenRow
-              key={token.id}
-              token={token}
-              isEditing={editingId === token.id}
-              editValue={editValue}
-              openMenuId={openMenuId}
-              onEditHoldings={handleEditHoldings}
-              onSaveEdit={handleSaveEdit}
-              onCancelEdit={handleCancelEdit}
-              onRemoveToken={handleRemoveToken}
-              onToggleMenu={toggleMenu}
-              onEditValueChange={setEditValue}
-            />
-          ))}
-        </tbody>
-      </table>
+    <div ref={menuRef} className="mt-8 bg-gray-800 shadow rounded-lg overflow-hidden">
+      <div className="overflow-x-auto">
+        <table className="min-w-full text-sm text-left">
+          <thead className="bg-gray-700 text-gray-300 uppercase text-xs">
+            <tr>
+              <th className="px-4 py-3 font-medium">Token</th>
+              <th className="px-4 py-3 font-medium">Price</th>
+              <th className="px-4 py-3 font-medium">24h %</th>
+              <th className="px-4 py-3 font-medium">Sparkline (7d)</th>
+              <th className="px-4 py-3 font-medium">Holdings</th>
+              <th className="px-4 py-3 font-medium">Value</th>
+              <th className="px-4 py-3 w-12"></th>
+            </tr>
+          </thead>
+          <tbody>
+            {currentTokens.map((token) => (
+              <TokenRow
+                key={token.id}
+                token={token}
+                isEditing={editingId === token.id}
+                editValue={editValue}
+                openMenuId={openMenuId}
+                onEditHoldings={handleEditHoldings}
+                onSaveEdit={handleSaveEdit}
+                onCancelEdit={handleCancelEdit}
+                onRemoveToken={handleRemoveToken}
+                onToggleMenu={toggleMenu}
+                onEditValueChange={setEditValue}
+              />
+            ))}
+          </tbody>
+        </table>
+      </div>
 
       <Pagination
         currentPage={currentPage}
