@@ -1,9 +1,9 @@
 import { useDispatch, useSelector } from "react-redux";
-import { refreshPrices, selectLoading, selectWatchlistTokens } from "../features/watchlist/watchlistSlice";
-import type { AppDispatch } from "../store/store";
-import AddTokenModal from "./AddTokenModal";
+import { refreshPrices, selectLoading, selectWatchlistTokens } from "../../features/watchlist/watchlistSlice";
+import type { AppDispatch } from "../../store/store";
+import AddTokenModal from "../AddTokenModal";
 import { RefreshCw } from "lucide-react";
-import starSvg from "../assets/star.svg";
+import starSvg from "../../assets/star.svg";
 
 function WatchlistHeader() {
   const dispatch = useDispatch<AppDispatch>();

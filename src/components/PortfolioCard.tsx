@@ -12,7 +12,6 @@ import {
   selectLastUpdated
 } from "../features/watchlist/watchlistSlice";
 
-// Chart colors optimized for accessibility and design consistency
 const CHART_COLORS = [
   "#10B981", // Emerald - Primary green
   "#8B5CF6", // Violet - Secondary purple
@@ -30,7 +29,7 @@ interface ChartDataItem {
   value: number;
   color: string;
   percentage: number;
-  [key: string]: string | number; // Index signature for Recharts compatibility
+  [key: string]: string | number;
 }
 
 interface EmptyStateProps {

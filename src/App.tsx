@@ -1,6 +1,6 @@
 import PortfolioCard from "./components/PortfolioCard";
-import WatchlistTable from "./components/WatchlistTable";
-import WatchlistHeader from "./components/WatchlistHeader";
+import WatchlistTable from "./components/watchlist/WatchlistTable";
+import WatchlistHeader from "./components/watchlist/WatchlistHeader";
 import logoSvg from "./assets/logo.svg";
 import walletSvg from "./assets/wallet.svg";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
