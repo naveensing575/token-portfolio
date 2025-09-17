@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
-import { useDispatch } from "react-redux";
-import { addToken } from "../features/watchlist/watchlistSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { addToken, selectWatchlistTokens } from "../features/watchlist/watchlistSlice";
 import { searchTokens, getTrendingTokens, getTokenPricesByIds } from "../services/coingecko";
 import type { AppDispatch } from "../store/store";
 import type { SearchToken, TrendingToken } from "../services/types";
@@ -9,12 +9,16 @@ import { X, Star } from "lucide-react";
 
 const AddTokenModal: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
+  const existingTokens = useSelector(selectWatchlistTokens);
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<SearchToken[]>([]);
   const [trending, setTrending] = useState<TrendingToken[]>([]);
   const [selected, setSelected] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
+
+  // Get existing token IDs for filtering
+  const existingTokenIds = existingTokens.map(token => token.id);
 
   useEffect(() => {
     if (open) {
@@ -50,8 +54,8 @@ const AddTokenModal: React.FC = () => {
     setLoading(true);
     try {
       for (const tokenId of selected) {
-        const token = results.find((t) => t.id === tokenId) ||
-          trending.find((t) => t.id === tokenId);
+        const token = filteredResults.find((t) => t.id === tokenId) ||
+          filteredTrending.find((t) => t.id === tokenId);
         if (!token) continue;
 
         try {
@@ -96,7 +100,11 @@ const AddTokenModal: React.FC = () => {
     }
   };
 
-  const displayList = query.length >= 2 ? results : trending;
+  // Filter out tokens that are already in the watchlist
+  const filteredResults = results.filter(token => !existingTokenIds.includes(token.id));
+  const filteredTrending = trending.filter(token => !existingTokenIds.includes(token.id));
+
+  const displayList = query.length >= 2 ? filteredResults : filteredTrending;
   const listTitle = query.length >= 2 ? "Search Results" : "Trending";
 
   return (

@@ -119,7 +119,7 @@ const TokenRow: React.FC<TokenRowProps> = ({
             />
             <button
               onClick={() => onSaveEdit(token.id)}
-              className="bg-[#A9E851] rounded-md text-black hover:text-[#98d147] text-xs px-2 py-1 font-medium min-w-[45px]"
+              className="text-[#A9E851] hover:text-[#98d147] text-xs px-2 py-1 font-medium min-w-[45px]"
             >
               Save
             </button>
@@ -233,13 +233,15 @@ const WatchlistTable: React.FC = () => {
     const handleClickOutside = (event: MouseEvent) => {
       if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
         setOpenMenuId(null);
+        setEditingId(null); // Also close edit mode
+        setEditValue(""); // Clear edit value
       }
     };
-    if (openMenuId) {
+    if (openMenuId || editingId) { // Listen when either menu is open OR editing
       document.addEventListener("mousedown", handleClickOutside);
       return () => document.removeEventListener("mousedown", handleClickOutside);
     }
-  }, [openMenuId]);
+  }, [openMenuId, editingId]);
 
   // Close menu on escape key
   useEffect(() => {
