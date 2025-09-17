@@ -25,7 +25,7 @@ interface TokenRowProps {
   onSaveEdit: (id: string) => void;
   onCancelEdit: () => void;
   onRemoveToken: (id: string) => void;
-  onToggleMenu: (id: string | null) => void; // updated to accept null
+  onToggleMenu: (id: string | null) => void;
   onEditValueChange: (value: string) => void;
 }
 

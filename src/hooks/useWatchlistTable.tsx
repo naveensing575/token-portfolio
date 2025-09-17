@@ -56,9 +56,9 @@ export const useWatchlistTable = () => {
     setOpenMenuId(null);
   }, [dispatch]);
 
-  const toggleMenu = useCallback((id: string) => {
-    setOpenMenuId(prev => prev === id ? null : id);
-  }, []);
+  const toggleMenu = (id: string | null) => {
+    setOpenMenuId((prev) => (prev === id ? null : id));
+  };
 
   const handlePrevPage = useCallback(() => {
     setCurrentPage(prev => Math.max(prev - 1, 1));
