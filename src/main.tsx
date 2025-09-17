@@ -19,7 +19,7 @@ const queryClient = new QueryClient();
 
 const { connectors } = getDefaultWallets({
   appName: "Token Portfolio",
-  projectId: "1835993f47bbb4e3e94501e210a2274e",
+  projectId: import.meta.env.VITE_WALLETCONNECT_PROJECT_ID,
 });
 
 const config = createConfig({

@@ -1,7 +1,7 @@
 import axios from "axios";
 import type { MarketToken, SearchToken, TrendingToken } from "./types";
 
-const API_BASE = "https://api.coingecko.com/api/v3";
+const API_BASE = import.meta.env.VITE_COINGECKO_API_URL;
 
 // 🔹 Fetch top coins with market data
 export const getMarketTokens = async (
