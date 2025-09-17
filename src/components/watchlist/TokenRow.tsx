@@ -25,7 +25,7 @@ interface TokenRowProps {
   onSaveEdit: (id: string) => void;
   onCancelEdit: () => void;
   onRemoveToken: (id: string) => void;
-  onToggleMenu: (id: string) => void;
+  onToggleMenu: (id: string | null) => void; // updated to accept null
   onEditValueChange: (value: string) => void;
 }
 
@@ -94,8 +94,14 @@ const TokenRow: React.FC<TokenRowProps> = memo(({
   }, [onRemoveToken, token.id]);
 
   const handleMenuToggle = useCallback(() => {
-    onToggleMenu(token.id);
-  }, [onToggleMenu, token.id]);
+    onToggleMenu(openMenuId === token.id ? null : token.id);
+  }, [onToggleMenu, openMenuId, token.id]);
+
+  const handleMenuClose = useCallback(() => {
+    if (openMenuId === token.id) {
+      onToggleMenu(null);
+    }
+  }, [onToggleMenu, openMenuId, token.id]);
 
   const isMenuOpen = openMenuId === token.id;
   const changeColorClass = token.change24h >= 0 ? "text-green-400" : "text-red-400";
@@ -157,7 +163,7 @@ const TokenRow: React.FC<TokenRowProps> = memo(({
         <button
           ref={menuButtonRef}
           onClick={handleMenuToggle}
-          className="p-1 text-gray-400 hover:text-white rounded transition-colors"
+          className="p-1 mb-2 text-gray-400 hover:text-white rounded transition-colors"
         >
           <MoreHorizontal size={16} />
         </button>
@@ -166,6 +172,7 @@ const TokenRow: React.FC<TokenRowProps> = memo(({
           position={menuPosition}
           onEditHoldings={handleEditClick}
           onRemove={handleRemoveClick}
+          onClose={handleMenuClose}
         />
       </td>
     </tr>
