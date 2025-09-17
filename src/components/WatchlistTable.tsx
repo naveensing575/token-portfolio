@@ -48,11 +48,25 @@ const TokenRow: React.FC<TokenRowProps> = ({
   onEditValueChange,
 }) => {
   const value = token.holdings * token.price;
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
+  const [menuPosition, setMenuPosition] = useState<'bottom' | 'top'>('bottom');
+
   const formatPrice = (price: number) => {
-    if (price < 0.01) return `$${price.toFixed(6)}`;
-    if (price < 1) return `$${price.toFixed(4)}`;
-    return `$${price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    if (price < 0.01) return `${price.toFixed(6)}`;
+    if (price < 1) return `${price.toFixed(4)}`;
+    return `${price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
   };
+
+  useEffect(() => {
+    if (openMenuId === token.id && menuButtonRef.current) {
+      const buttonRect = menuButtonRef.current.getBoundingClientRect();
+      const viewportHeight = window.innerHeight;
+      const spaceBelow = viewportHeight - buttonRect.bottom;
+
+      // If there's less than 120px space below, show menu above
+      setMenuPosition(spaceBelow < 120 ? 'top' : 'bottom');
+    }
+  }, [openMenuId, token.id]);
 
   return (
     <tr className="border-b border-gray-700 hover:bg-gray-750 text-white">
@@ -105,13 +119,13 @@ const TokenRow: React.FC<TokenRowProps> = ({
             />
             <button
               onClick={() => onSaveEdit(token.id)}
-              className="text-[#A9E851] hover:text-[#98d147] text-xs px-1 font-medium"
+              className="bg-[#A9E851] rounded-md text-black hover:text-[#98d147] text-xs px-2 py-1 font-medium min-w-[45px]"
             >
               Save
             </button>
             <button
               onClick={onCancelEdit}
-              className="text-gray-400 hover:text-gray-300 text-xs px-1"
+              className="text-gray-400 hover:text-gray-300 text-xs px-2 py-1 min-w-[45px]"
             >
               Cancel
             </button>
@@ -125,13 +139,15 @@ const TokenRow: React.FC<TokenRowProps> = ({
       </td>
       <td className="px-4 py-3 relative">
         <button
+          ref={menuButtonRef}
           onClick={() => onToggleMenu(token.id)}
           className="p-1 text-gray-400 hover:text-white rounded transition-colors"
         >
           <MoreHorizontal size={16} />
         </button>
         {openMenuId === token.id && (
-          <div className="absolute right-0 top-8 bg-gray-700 border border-gray-600 rounded-lg shadow-lg z-10 min-w-[140px]">
+          <div className={`absolute right-0 bg-gray-700 border border-gray-600 rounded-lg shadow-lg z-50 min-w-[140px] ${menuPosition === 'top' ? 'bottom-8' : 'top-8'
+            }`}>
             <button
               onClick={() => onEditHoldings(token.id, token.holdings)}
               className="flex items-center gap-2 w-full px-3 py-2 text-sm text-white hover:bg-gray-600 rounded-t-lg transition-colors"
