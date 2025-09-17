@@ -6,7 +6,12 @@ A modern, responsive cryptocurrency portfolio tracker built with React, TypeScri
 
 [**View Live Application**](https://token-portfolio-ten.vercel.app/)
 
-<img width="470" height="496" alt="image" src="https://github.com/user-attachments/assets/24cfcdc8-0763-47a3-83d2-218677892635" />
+<p align="center">
+ <img width="500" height="496" alt="image" src="https://github.com/user-attachments/assets/24cfcdc8-0763-47a3-83d2-218677892635" />
+  <br/>
+  <em>📊 Token Portfolio Dashboard – Real-time crypto tracking</em>
+</p>
+
 
 
 ## Features
