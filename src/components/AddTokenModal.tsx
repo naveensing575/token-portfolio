@@ -110,7 +110,7 @@ const AddTokenModal: React.FC = () => {
   return (
     <Dialog.Root open={open} onOpenChange={setOpen}>
       <Dialog.Trigger asChild>
-        <button className="flex items-center gap-2 bg-[#A9E851] hover:bg-[#98d147] text-black font-medium px-4 py-2.5 rounded-lg transition-colors duration-200 shadow-lg">
+        <button className="flex items-center gap-2 bg-[#A9E851] hover:bg-[#98d147] text-black font-semibold px-4 py-1 rounded-lg transition-colors duration-200 shadow-lg">
           <span className="text-lg">+</span>
           Add Token
         </button>
@@ -147,7 +147,6 @@ const AddTokenModal: React.FC = () => {
             <div className="flex-1 min-h-0 flex flex-col">
               <div className="flex items-center gap-2 mb-2 flex-shrink-0">
                 <h3 className="text-sm font-medium text-gray-300">{listTitle}</h3>
-                {query.length < 2 && <Star size={14} className="text-yellow-400" />}
               </div>
 
               <div className="flex-1 overflow-y-auto space-y-1 min-h-0">
