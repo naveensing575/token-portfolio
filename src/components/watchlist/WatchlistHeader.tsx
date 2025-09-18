@@ -63,9 +63,9 @@ function WatchlistHeader() {
           <img
             src={starSvg}
             alt="Star"
-            className="w-5 h-5"
+            className="w-7 h-7"
           />
-          <h2 className="text-xl font-semibold text-white">
+          <h2 className="text-2xl font-semibold text-white">
             Watchlist
           </h2>
         </div>

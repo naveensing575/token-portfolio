@@ -4,7 +4,7 @@ import TokenRow from "./TokenRow";
 import TablePagination from "./TablePagination";
 
 const LoadingState: React.FC = () => (
-  <div className="mt-8 bg-gray-800 shadow rounded-lg">
+  <div className="mt-8 bg-[#27272A] shadow rounded-lg">
     <div className="p-12 text-center text-gray-400">
       <div className="animate-spin w-8 h-8 border-2 border-gray-600 border-t-[#A9E851] rounded-full mx-auto mb-4"></div>
       Loading tokens...
@@ -13,7 +13,7 @@ const LoadingState: React.FC = () => (
 );
 
 const EmptyState: React.FC = () => (
-  <div className="mt-8 bg-gray-800 shadow rounded-lg">
+  <div className="mt-8 bg-[#27272A] shadow rounded-lg">
     <div className="p-12 text-center text-gray-400">
       <div className="text-4xl mb-4">📈</div>
       <div className="text-lg font-medium text-gray-300 mb-2">No tokens in watchlist</div>

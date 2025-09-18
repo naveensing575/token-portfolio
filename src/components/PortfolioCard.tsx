@@ -126,7 +126,7 @@ const PortfolioCard: React.FC = () => {
   const hasHoldings = chartData.length > 0;
 
   return (
-    <div className="bg-[#27272A] rounded-xl shadow-lg border border-gray-700 overflow-hidden mt-10">
+    <div className="bg-[#27272A] rounded-xl shadow-lg overflow-hidden mt-10 mb-15">
       {/* Mobile Layout */}
       <div className="block md:hidden">
         <div className="p-6">
