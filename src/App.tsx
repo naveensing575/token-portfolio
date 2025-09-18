@@ -18,7 +18,7 @@ function App() {
                 className="w-5 h-5 md:w-7 md:h-7"
               />
             </div>
-            <h1 className="text-md md:text-3xl font-bold text-white truncate">
+            <h1 className="text-md md:text-3xl font-semibold text-white truncate">
               Token Portfolio
             </h1>
           </div>
