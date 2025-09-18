@@ -48,12 +48,6 @@ function WatchlistHeader() {
             <AddTokenModal />
           </div>
         </div>
-        {/* Mobile Table Headers */}
-        <div className="grid grid-cols-3 gap-4 px-4 py-2 text-xs font-medium text-gray-400 uppercase tracking-wide border-b border-gray-700">
-          <div>Token</div>
-          <div className="text-right">Price</div>
-          <div className="text-right">Value</div>
-        </div>
       </div>
 
       {/* Desktop Layout */}
