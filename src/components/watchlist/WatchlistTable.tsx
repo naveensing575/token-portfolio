@@ -76,17 +76,17 @@ const WatchlistTable: React.FC = () => {
   if (tokens.length === 0) return <EmptyState />;
 
   return (
-    <div ref={menuRef} className="mt-8 bg-gray-800 shadow rounded-lg overflow-hidden">
+    <div ref={menuRef} className="mt-8 bg-[#212124] shadow rounded-lg overflow-hidden border border-gray-600">
       <div className="overflow-x-auto">
-        <table className="min-w-full text-sm text-left">
-          <thead className="bg-gray-700 text-gray-300 uppercase text-xs">
+        <table className="min-w-full text-sm text-left table-fixed">
+          <thead className="bg-[#27272A] text-gray-300 uppercase text-xs">
             <tr>
-              <th className="px-4 py-3 font-medium">Token</th>
-              <th className="px-4 py-3 font-medium">Price</th>
-              <th className="px-4 py-3 font-medium">24h %</th>
-              <th className="px-4 py-3 font-medium">Sparkline (7d)</th>
-              <th className="px-4 py-3 font-medium">Holdings</th>
-              <th className="px-4 py-3 font-medium">Value</th>
+              <th className="px-4 py-3 font-medium w-1/5">Token</th>
+              <th className="px-4 py-3 font-medium w-1/6">Price</th>
+              <th className="px-4 py-3 font-medium w-1/8">24h %</th>
+              <th className="px-4 py-3 font-medium w-1/6">Sparkline (7d)</th>
+              <th className="px-4 py-3 font-medium w-1/8">Holdings</th>
+              <th className="px-4 py-3 font-medium w-1/6">Value</th>
               <th className="px-4 py-3 w-12"></th>
             </tr>
           </thead>

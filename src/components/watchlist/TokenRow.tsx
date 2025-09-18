@@ -107,40 +107,40 @@ const TokenRow: React.FC<TokenRowProps> = memo(({
   const changeColorClass = token.change24h >= 0 ? "text-green-400" : "text-red-400";
 
   return (
-    <tr className="border-b border-gray-700 hover:bg-gray-750 text-white">
+    <tr className="hover:bg-[#27272A]">
       {/* Token Info */}
-      <td className="px-4 py-3">
+      <td className="px-6 py-3 w-64">
         <div className="flex items-center gap-3">
           <TokenImage
             src={token.image}
             alt={token.name}
             symbol={token.symbol}
-            className="w-8 h-8 rounded-full"
+            className="w-7 h-7 rounded-full flex-shrink-0"
           />
-          <div>
-            <div className="font-medium text-white">{token.name}</div>
-            <div className="text-gray-400 text-xs">{token.symbol.toUpperCase()}</div>
+          <div className="min-w-0">
+            <div className="text-sm font-medium text-white truncate">{token.name}</div>
+            <div className="text-xs text-gray-400 truncate">{token.symbol.toUpperCase()}</div>
           </div>
         </div>
       </td>
 
       {/* Price */}
-      <td className="px-4 py-3 text-white font-medium">
+      <td className="px-6 py-3 text-sm text-white w-32">
         {formattedPrice}
       </td>
 
       {/* 24h Change */}
-      <td className={`px-4 py-3 font-semibold ${changeColorClass}`}>
+      <td className={`px-6 py-3 text-sm font-medium w-24 ${changeColorClass}`}>
         {formattedChange}
       </td>
 
       {/* Sparkline */}
-      <td className="px-4 py-3 w-32">
+      <td className="px-6 py-3 w-40">
         <TableSparkline data={token.sparkline} change24h={token.change24h} />
       </td>
 
       {/* Holdings */}
-      <td className="px-4 py-3">
+      <td className="px-6 py-3 w-28">
         {isEditing ? (
           <EditHoldingsForm
             value={editValue}
@@ -149,21 +149,21 @@ const TokenRow: React.FC<TokenRowProps> = memo(({
             onCancel={onCancelEdit}
           />
         ) : (
-          <span className="text-white">{token.holdings}</span>
+          <span className="text-sm text-white">{token.holdings}</span>
         )}
       </td>
 
       {/* Value */}
-      <td className="px-4 py-3 font-medium text-white">
+      <td className="px-6 py-3 text-sm text-white w-32">
         {formattedValue}
       </td>
 
       {/* Actions */}
-      <td className="px-4 py-3 relative">
+      <td className="px-6 py-3 relative w-10">
         <button
           ref={menuButtonRef}
           onClick={handleMenuToggle}
-          className="p-1 mb-2 text-gray-400 hover:text-white rounded transition-colors"
+          className="p-1 text-gray-400 hover:text-white rounded transition-colors"
         >
           <MoreHorizontal size={16} />
         </button>

@@ -2,7 +2,7 @@
 
 /* Dark mode body styling */
 body {
-  background-color: #111827;
+  background-color: #212124;
   /* gray-900 */
   color: #ffffff;
 }
@@ -15,4 +15,16 @@ body {
 * {
   -ms-overflow-style: none;
   scrollbar-width: none;
+}
+
+/* Hide scrollbar on number inputs */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* For Firefox */
+input[type="number"] {
+  -moz-appearance: textfield;
 }

@@ -19,20 +19,20 @@ const TablePagination: React.FC<TablePaginationProps> = memo(({
   onPrevPage,
   onNextPage,
 }) => (
-  <div className="flex justify-between items-center px-4 py-3 bg-gray-700 border-t border-gray-600">
-    <div className="text-sm text-gray-300">
+  <div className="flex justify-between items-center px-6 py-3 bg-[#212124] border-t border-gray-600">
+    <div className="text-xs text-gray-400">
       {startIndex + 1} – {Math.min(endIndex, totalTokens)} of {totalTokens} results
     </div>
     <div className="flex items-center gap-2">
-      <span className="text-sm text-gray-300">
+      <span className="text-xs text-gray-400">
         {currentPage} of {totalPages} pages
       </span>
       <button
         onClick={onPrevPage}
         disabled={currentPage === 1}
-        className={`px-3 py-1 rounded text-sm transition-colors ${currentPage === 1
-            ? "bg-gray-600 text-gray-400 cursor-not-allowed"
-            : "bg-gray-600 text-white hover:bg-gray-500"
+        className={`px-2.5 py-1 rounded text-xs font-medium transition-colors ${currentPage === 1
+            ? "text-gray-500 cursor-not-allowed"
+            : "text-gray-300"
           }`}
       >
         Prev
@@ -40,9 +40,9 @@ const TablePagination: React.FC<TablePaginationProps> = memo(({
       <button
         onClick={onNextPage}
         disabled={currentPage >= totalPages}
-        className={`px-3 py-1 rounded text-sm transition-colors ${currentPage >= totalPages
-            ? "bg-gray-600 text-gray-400 cursor-not-allowed"
-            : "bg-[#A9E851] text-black hover:bg-[#98d147] font-medium"
+        className={`px-2.5 py-1 rounded text-xs font-medium transition-colors ${currentPage >= totalPages
+            ? "text-gray-500 cursor-not-allowed"
+            : "text-gray-300"
           }`}
       >
         Next
