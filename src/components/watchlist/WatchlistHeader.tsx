@@ -65,7 +65,7 @@ function WatchlistHeader() {
             alt="Star"
             className="w-5 h-5"
           />
-          <h2 className="text-xl font-semibold text-white">a
+          <h2 className="text-xl font-semibold text-white">
             Watchlist
           </h2>
         </div>
